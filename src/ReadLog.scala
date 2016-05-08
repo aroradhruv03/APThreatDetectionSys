@@ -35,7 +35,7 @@ object ReadLog {
 
   def main (args: Array[String]): Unit =
   {
-    val conf = new SparkConf().setAppName("BlahBlahBlah!").setMaster("local")
+    val conf = new SparkConf().setAppName("ReadLog").setMaster("local")
     val sc = new SparkContext(conf)
 
     // Reading the SnortData Logs
@@ -52,18 +52,35 @@ object ReadLog {
     println("Time :")
 
     // Will print time
-    for(column <- fileLine.take(5)) println(column(3).replace("\"","").concat(":").concat(column(4).concat(":").concat(column(5)) )) // Used to test if the file was read correctly
+//    for(column <- fileLine.take(5)) println(column(3).replace("\"","").concat(":").concat(column(4).concat(":").concat(column(5)) )) // Used to test if the file was read correctly
 
-    val file_header2 = sc.textFile(INP_FILE2)
-    val fileLine2 = file.map(s => (s.split(",")) )
+    println(fileLine)
+    var sttt:String = null
 
-    val source_ip = file_header2.map( s => s(3) )
-    val dest_ip = fileLine2.map( s => s(3))
 
-    println("Original data short")
-    file_header2.collect().take(5).foreach { println }
+    for(column <- fileLine.take(5)){
 
-    println("Src ")
-    for(column <- fileLine2.take(5)) println(column(2))
+       val len = column(1).split(" ")(1)
+
+      sttt = sttt+" "+ len
+
+//      println(len)
+//      println(column(1).split(" ")(1))
+
+    }
+
+    println(sttt)
+
+//    val file_header2 = sc.textFile(INP_FILE2)
+//    val fileLine2 = file.map(s => (s.split(",")) )
+//
+//    val source_ip = file_header2.map( s => s(3) )
+//    val dest_ip = fileLine2.map( s => s(3))
+//
+//    println("Original data short")
+//    file_header2.collect().take(5).foreach { println }
+//
+//    println("Src ")
+//    for(column <- fileLine2.take(5)) println(column(2))
   }
 }
