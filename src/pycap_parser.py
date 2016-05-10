@@ -3,6 +3,7 @@
 Created on Sun May  8 01:16:46 2016
 
 @author: dhruv
+@version: 2.0
 """
 
 import pcapy
@@ -19,20 +20,25 @@ OUTPUT_PATH_PARSED = "/Users/dhruv/Downloads/APT/InputData/"
 TRAINING_FILE = "train.tsv"
 TESTING_FILE = "test.tsv"
 
+RANDOM_INPUT = '/Users/dhruv/Downloads/APT/InputData/RandomInputs'
+RANDOM_INP_FILE = 'random_test.tsv'
+RANDOM_INPUT_ATCK = '/Users/dhruv/Downloads/APT/InputData/RandomInputsAtck'
+
 def main():
+    global i
+    global write_flag
+    readFileNames(INPUT_PATH_ATTACK,"attack",TRAINING_FILE)
+    readFileNames(INPUT_PATH_BENIGN,"benign",TRAINING_FILE)
 
-    #benign_folder1 = [f for f in listdir("/Users/dhruv/Downloads/APT/Debo/benign_temp")]
-    #attack_folder1 =  [f for f in listdir("/Users/dhruv/Downloads/APT/Input Data/netattackermay3")]
-
-    #print attack_folder1
-    #readData(attack_folder1)
-    #readData(benign_folder1)
-
-    readFileNames(INPUT_PATH_ATTACK,"attack")
-    readFileNames(INPUT_PATH_BENIGN,"benign")
+    write_flag = 'false'
+    i=0
+    readFileNames(RANDOM_INPUT,"benign",RANDOM_INP_FILE)
+    readFileNames(RANDOM_INPUT_ATCK,"attack",RANDOM_INP_FILE)
 
 
-def readFileNames(input_path,typeAttack):
+
+
+def readFileNames(input_path,typeAttack,dest_fileName):
     from os import walk
 
     f = []
@@ -45,7 +51,7 @@ def readFileNames(input_path,typeAttack):
     for dir_Names in dirnames:
         attack_folder = [fi for fi in listdir(input_path+"/"+dir_Names)]
         print attack_folder
-        readData(input_path,dir_Names,attack_folder,typeAttack)
+        readData(input_path,dir_Names,attack_folder,typeAttack,dest_fileName)
 
     """
     cap = pcapy.open_offline('/Users/dhruv/Downloads/APT/Debo/attack_temp/stream-1.cap')
@@ -62,7 +68,7 @@ def readFileNames(input_path,typeAttack):
     print data
     """
 
-def readData(input_path,dir_Names,folder_name,typeAttack) :
+def readData(input_path,dir_Names,folder_name,typeAttack,dest_fileName) :
     for fileName in folder_name:
         if fileName==".DS_Store":
             continue
@@ -79,14 +85,14 @@ def readData(input_path,dir_Names,folder_name,typeAttack) :
                     (header,length) = reader.next()
                 except pcapy.PcapError:
                     continue
-            writeFile(s,typeAttack)
+            writeFile(s,typeAttack,dest_fileName)
 
 
-def writeFile(data,typeAttack):
+def writeFile(data,typeAttack,dest_fileName):
     global i
     global write_flag
 
-    target = open(OUTPUT_PATH_PARSED+'/'+TRAINING_FILE, 'a')
+    target = open(OUTPUT_PATH_PARSED+'/'+dest_fileName, 'a')
     data = data.encode('utf-8')
 
     if(write_flag=='false'):
